@@ -1,27 +1,41 @@
 package org.ahavah.portal.services;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.dtos.user.CreateUserRequest;
 import org.ahavah.portal.dtos.user.UpdateUserRequest;
 import org.ahavah.portal.dtos.user.UserDto;
+import org.ahavah.portal.entities.User;
 import org.ahavah.portal.mappers.UserMapper;
 import org.ahavah.portal.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServices {
+
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+
+    @Value("${default_pass}")
+    String defaultPass;
+
     public UserDto createUser(CreateUserRequest createUserRequest) {
+
         var user = userMapper.toEntity(createUserRequest);
-        user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
+        if (user.getPassword() == null)
+            user.setPassword(defaultPass);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return userMapper.userDto(user);
     }
@@ -60,4 +74,19 @@ public class UserServices {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+
+    public User currentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof Long) {
+            Long userId = (Long) principal;
+
+            return userRepository.findById(userId).orElse(null);
+        }
+        // Handle cases where the principal is not a Long, if necessary
+        throw new IllegalStateException("User ID in security context is not a Long.");
+    }
+
 }

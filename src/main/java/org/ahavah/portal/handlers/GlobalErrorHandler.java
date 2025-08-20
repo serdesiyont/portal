@@ -1,5 +1,6 @@
 package org.ahavah.portal.handlers;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,5 +40,21 @@ public class GlobalErrorHandler {
         error.put("error", "Malformed JSON request: " + ex.getMostSpecificCause().getMessage());
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Map<String, String>> handleIOException(IOException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "I/O error occurred: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(AmazonS3Exception.class)
+    public ResponseEntity<Map<String, String>> handleAmazonS3Exception(AmazonS3Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Amazon S3 error: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+
 
 }

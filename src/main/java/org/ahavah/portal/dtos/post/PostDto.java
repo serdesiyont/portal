@@ -8,7 +8,6 @@ import org.ahavah.portal.entities.User;
 @Data
 public class PostDto {
 
-    Long id;
     String title;
     String pdfTitle;
     String pdfLink;

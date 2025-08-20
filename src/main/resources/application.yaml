@@ -2,14 +2,20 @@ spring:
   application:
     name: portal
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5431/dev
-    username: ahavah
+    url: jdbc:postgresql://127.0.0.1:5432/postgres
+    username: postgres
     password: password
   flyway:
     baseline-on-migrate: true
     clean-disabled: false
   jpa:
     show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
 server:
   port: 8888
 
@@ -17,3 +23,16 @@ jwt:
   secret: ${JWT_SECRET}
   access_expiry: 86400
   refresh_expiry: 86400
+default_pass: ${DEFAULT_PASSWORD}
+
+cloudflare:
+  r2:
+    account-id: ${CLOUDFLARE_R2_ACCOUNT_ID}
+    access-key-id: ${CLOUDFLARE_R2_ACCESS_KEY}
+    secret-access-key: ${CLOUDFLARE_R2_SECRET_KEY}
+    bucket-lessons: ${CLOUDFLARE_R2_BUCKET_LESSONS}
+    bucket-resources: ${CLOUDFLARE_R2_BUCKET_RESOURCES}
+    endpoint: ${CLOUDFLARE_R2_ENDPOINT}
+    bucket-lessons-url: ${CLOUDFLARE_LESSONS_PUBLIC_URL}
+    bucket-resources-url: ${CLOUDFLARE_RESOURCES_PUBLIC_URLL}
+

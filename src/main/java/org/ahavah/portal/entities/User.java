@@ -3,8 +3,7 @@ package org.ahavah.portal.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
+
 
 
 @Entity
@@ -43,9 +42,20 @@ public class User {
     @Column(name = "passchanged")
     private Boolean passchanged = false;
 
+    @Column(name = "gender", nullable = false)
+    private String gender;
+
+    @Column(name = "phonenum", nullable = false)
+    private String phone_num;
+
+    @Column(name = "additional", length = Integer.MAX_VALUE)
+    private String additional;
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) createdAt = OffsetDateTime.now();
         if (passchanged == null) passchanged = false;
+        if (role == null) role = "Student";
+        if (password == null) password = "defaultPassword"; // Set a default password if none provided
     }
 }

@@ -32,6 +32,7 @@ public class JwtService {
     private String generateTk(Long id, String email, String role, String division, Long time) {
         return Jwts.builder()
                 .setSubject(id.toString())
+                .claim("id", id)
                 .claim("email", email)
                 .claim("division", division)
                 .claim("role", role)
@@ -61,8 +62,15 @@ public class JwtService {
                 .getPayload();
     }
 
-    public  Long getUserIdFromToken(String token) {
-        return Long.valueOf(getClaims(token).getSubject());
+    public Long getUserIdFromToken(String token) {
+        var idObj = getClaims(token).get("id");
+        if (idObj instanceof Number) {
+            return ((Number) idObj).longValue();
+        }
+        if (idObj != null) {
+            return Long.valueOf(idObj.toString());
+        }
+        return null;
     }
 
     public String getRoleFromToken(String token) {

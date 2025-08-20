@@ -6,6 +6,9 @@ create table if not exists users
     password    varchar not null,
     division    varchar not null check (upper(division) in ('ALL', 'DJANGO', 'REACT', 'LARAVEL', 'DSA', 'BEGINNER', 'FLUTTER')),
     role        varchar not null check (upper(role) in ('SOCIAL', 'ADMIN', 'MENTOR', 'STUDENT')),
+    gender      varchar not null check (upper(gender) in ('MALE', 'FEMALE')),
+    phoneNum    integer not null,
+    additional text,
     created_at  timestamptz default now(),
     passchanged bool default false
     );
