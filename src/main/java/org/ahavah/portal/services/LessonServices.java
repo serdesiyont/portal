@@ -6,22 +6,17 @@ import org.ahavah.portal.dtos.lesson.LessonDto;
 import org.ahavah.portal.mappers.LessonMapper;
 import org.ahavah.portal.mappers.UserMapper;
 import org.ahavah.portal.repositories.LessonRepository;
-import org.ahavah.portal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
-public class LessonService {
+public class LessonServices {
 
     private final R2Service r2Service;
     private final LessonMapper lessonMapper;

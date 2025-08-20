@@ -38,7 +38,7 @@ public class R2Service {
             s3Client.putObject(putObjectRequest);
 
             // Construct and return the public URL of the uploaded object.
-            return bucketUrl + fileName;
+            return bucketUrl+"/" + fileName;
 
 
     }

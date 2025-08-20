@@ -34,5 +34,5 @@ cloudflare:
     bucket-resources: ${CLOUDFLARE_R2_BUCKET_RESOURCES}
     endpoint: ${CLOUDFLARE_R2_ENDPOINT}
     bucket-lessons-url: ${CLOUDFLARE_LESSONS_PUBLIC_URL}
-    bucket-resources-url: ${CLOUDFLARE_RESOURCES_PUBLIC_URLL}
+    bucket-resources-url: ${CLOUDFLARE_RESOURCES_PUBLIC_URL}
 
