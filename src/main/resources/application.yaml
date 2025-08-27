@@ -13,8 +13,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 server:
   port: 8888
@@ -35,4 +35,5 @@ cloudflare:
     endpoint: ${CLOUDFLARE_R2_ENDPOINT}
     bucket-lessons-url: ${CLOUDFLARE_LESSONS_PUBLIC_URL}
     bucket-resources-url: ${CLOUDFLARE_RESOURCES_PUBLIC_URL}
-
+piston:
+  base-url: ${PISTON_BASE_URL}

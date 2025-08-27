@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LessonController {
     private final LessonServices lessonService;
+
 
 
 
@@ -35,25 +37,22 @@ public class LessonController {
             return ResponseEntity.badRequest().body("File is empty");
         }
 
-        if(!file.getContentType().equals("text/markdown")){
-            return ResponseEntity.badRequest().body("File must be a text/markdown file, you provided: " + file.getContentType());
+        if(!(Objects.equals(file.getContentType(), "text/markdown")) || file.getSize() > 1000000){
+            return ResponseEntity.badRequest().body("File must be a text/markdown file, you provided: " + file.getContentType() + "Size exceeds 1MB");
         }
+
 
         var upload = this.lessonService.uploadLesson(file, createLessonRequest);
         return ResponseEntity.ok(upload);
         }
 
 
-    @PreAuthorize("hasRole('MENTOR') or hasRole('STUDENT') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MENTOR') or hasRole('STUDENT')")
     @GetMapping()
     public ResponseEntity<List<LessonDto>> getLessons(
-            @RequestParam(value = "division") String division
     ) {
-        if(division == null || division.isEmpty()){
-            return ResponseEntity.badRequest().body(null);
-        }
 
-        var lessons = this.lessonService.getLessons(division);
+        var lessons = this.lessonService.getLessons();
 
         if (lessons.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

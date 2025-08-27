@@ -52,18 +52,10 @@ public class LessonServices {
         }
     }
 
-    public List<LessonDto> getLessons(String division) {
-        List<LessonDto> lessonDtos = new ArrayList<>();
-
-        var lessons = lessonRepository.getLessonsByScheduleBeforeAndDivision(OffsetDateTime.now(),division.toLowerCase());
-
-        lessons.forEach(lesson -> {
-            var l = lessonMapper.toDto(lesson);
-            l.setUser(userMapper.userDto(lesson.getPostedBy()));
-            lessonDtos.add(l);
-        });
-
-        return lessonDtos;
+    public List<LessonDto> getLessons() {
+        var user = this.userServices.currentUser();
+        var lessons = lessonRepository.getLessonsByScheduleBeforeAndDivision(OffsetDateTime.now(),(user.getDivision()).toLowerCase());
+        return lessonMapper.toDtos(lessons);
     }
 
     public String deleteLesson(Long id) {
@@ -72,7 +64,7 @@ public class LessonServices {
         if (lesson == null) {
             return "Lesson not found";
         }
-        if(!(curUser.getDivision().toLowerCase()).equals(lesson.getDivision())) {
+        if(!(curUser.getDivision()).equalsIgnoreCase((lesson.getDivision()))) {
             return "You are not authorized to delete this lesson";
         }
         lessonRepository.delete(lesson);

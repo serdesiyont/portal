@@ -21,17 +21,18 @@ import java.util.Map;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
+    private  final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @RequestBody LoginDto loginDto,
-            HttpServletResponse response) {
+            @RequestBody LoginDto loginDto
+//            HttpServletResponse response
+    ) {
            try {
-               authenticationManager.authenticate(
+               this.authenticationManager.authenticate(
                        new UsernamePasswordAuthenticationToken(
                                loginDto.getEmail(),
                                loginDto.getPassword()
@@ -41,22 +42,26 @@ public class AuthController {
                var access = jwtService.generateAccessToken(user.getId(), loginDto.getEmail(), user.getRole(),  user.getDivision());
 
                var refresh = jwtService.generateRefreshToken(user.getId(), loginDto.getEmail(), user.getRole(),  user.getDivision());
-               var refreshCookie = new Cookie("refresh_token", refresh);
-               refreshCookie.setHttpOnly(true);
-               refreshCookie.setPath("/auth/refresh");
-               refreshCookie.setMaxAge(86400);
-               refreshCookie.setSecure(false);
-               response.addCookie(refreshCookie);
+//               var refreshCookie = new Cookie("refresh_token", refresh);
+//               refreshCookie.setHttpOnly(true);
+//               refreshCookie.setPath("/auth/refresh");
+//               refreshCookie.setMaxAge(86400);
+//               refreshCookie.setSecure(false);
+//               response.addCookie(refreshCookie);
+//
+//                var accessCookie = new Cookie("access_token", access);
+//                accessCookie.setHttpOnly(true);
+//                accessCookie.setPath("/");
+//                accessCookie.setMaxAge(3600);
+//                accessCookie.setSecure(false);
+//                response.addCookie(accessCookie);
 
-                var accessCookie = new Cookie("access_token", access);
-                accessCookie.setHttpOnly(true);
-                accessCookie.setPath("/");
-                accessCookie.setMaxAge(3600);
-                accessCookie.setSecure(false);
-                response.addCookie(accessCookie);
-
-               return ResponseEntity.ok(Map.of("msg", "Login Successful",
-                       "ROLE", user.getRole(), "DIVISION", user.getDivision()));
+               return ResponseEntity.ok(Map.of(
+                       "msg", "Login Successful",
+                       "ROLE", user.getRole(),
+                       "DIVISION", user.getDivision(),
+                       "ACCESS_TOKEN", access ,
+                       "REFRESH_TOKEN", refresh));
            }
            catch (
                    BadCredentialsException e

@@ -65,7 +65,6 @@ public class SecurityConfig {
             c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
-//                .requestMatchers( "/post/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
 //                .requestMatchers(HttpMethod.POST, "/lessons").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()

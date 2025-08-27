@@ -5,11 +5,16 @@ import org.ahavah.portal.entities.Resource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface ResourceMapper {
     @Mapping(target="postedBy", ignore = true)
     Resource toEntity(String title);
 
+    @Mapping(source = "postedBy", target = "user")
     ResourceDto toDto(Resource resource);
+
+    List<ResourceDto> toDtos(List<Resource> resources);
 
 }

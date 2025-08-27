@@ -6,12 +6,16 @@ import org.ahavah.portal.entities.Lesson;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface LessonMapper {
-
-
 
     @Mapping(target = "postedBy", ignore = true)
     Lesson toEntity(CreateLessonRequest createLessonRequest);
+
+    @Mapping(source = "postedBy", target = "user")
     LessonDto toDto(Lesson lesson);
+
+    List<LessonDto> toDtos(List<Lesson> lessons);
 }

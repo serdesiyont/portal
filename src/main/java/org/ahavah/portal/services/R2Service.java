@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class R2Service {
@@ -18,27 +18,32 @@ public class R2Service {
 
     public String uploadFile(String bucketName, String bucketUrl, MultipartFile file) throws IOException {
 
-            String fileName = file.getOriginalFilename();
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
-            metadata.setContentType(file.getContentType());
+        String randomUUID= UUID.randomUUID().toString();
+        String fileName = file.getOriginalFilename();
+        assert fileName != null;
+        String key =   randomUUID + "_" + fileName.replace(" ", "_");
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
 
-            // Read the file into a byte array to make the stream retryable
-            byte[] bytes = file.getBytes();
-            InputStream inputStream = new ByteArrayInputStream(bytes);
+        // Read the file into a byte array to make the stream retryable
+        byte[] bytes = file.getBytes();
+        InputStream inputStream = new ByteArrayInputStream(bytes);
 
-            // Create the PutObjectRequest to send the file to R2.
-            PutObjectRequest putObjectRequest = new PutObjectRequest(
+        // Create the PutObjectRequest to send the file to R2.
+        PutObjectRequest putObjectRequest = new PutObjectRequest(
                     bucketName,
-                    fileName,
+                    key,
                     inputStream,
                     metadata
             );
 
+
+
             s3Client.putObject(putObjectRequest);
 
             // Construct and return the public URL of the uploaded object.
-            return bucketUrl+"/" + fileName;
+            return bucketUrl+"/" + key;
 
 
     }

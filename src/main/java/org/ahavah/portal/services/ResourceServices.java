@@ -45,17 +45,12 @@ public class ResourceServices {
         }
     }
 
-    public List<ResourceDto> getResources(String division) {
-        List<ResourceDto> resourceDtos = new ArrayList<>();
+    public List<ResourceDto> getResources() {
+        var user = this.userServices.currentUser();
+        var resources = resourceRepository.getResourcesByDivision((user.getDivision()).toLowerCase());
 
-        var resources = resourceRepository.getResourcesByDivision(division);
-        resources.forEach(resource -> {
-            var r = resourceMapper.toDto(resource);
-            r.setUser(userMapper.userDto(resource.getPostedBy()));
-            resourceDtos.add(r);
-        });
 
-        return resourceDtos;
+        return resourceMapper.toDtos(resources);
     }
 
     public String deleteLesson(Long id) {

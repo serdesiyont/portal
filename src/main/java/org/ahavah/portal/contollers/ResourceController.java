@@ -37,6 +37,10 @@ public class ResourceController {
             return ResponseEntity.badRequest().body("File must be a application/pdf file, you provided a " + file.getContentType());
         }
 
+        if(file.getSize() > 1000000){
+            return ResponseEntity.badRequest().body("File limit of 5MB exceeded");
+        }
+
         var upload = this.resourceServices.uploadLesson(file,title);
         return ResponseEntity.ok(upload);
     }
@@ -45,13 +49,11 @@ public class ResourceController {
     @PreAuthorize("hasRole('MENTOR') or hasRole('STUDENT') or hasRole('ADMIN')")
     @GetMapping()
     public ResponseEntity<List<ResourceDto>> getLessons(
-            @RequestParam(value = "division") String division
-    ) {
-        if(division == null || division.isEmpty()){
-            return ResponseEntity.badRequest().body(null);
-        }
 
-        var resources = this.resourceServices.getResources(division);
+    ) {
+
+
+        var resources = this.resourceServices.getResources();
 
         if (resources.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
