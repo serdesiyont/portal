@@ -54,7 +54,7 @@ public class LessonServices {
 
     public List<LessonDto> getLessons() {
         var user = this.userServices.currentUser();
-        var lessons = lessonRepository.getLessonsByScheduleBeforeAndDivision(OffsetDateTime.now(),(user.getDivision()).toLowerCase());
+        var lessons = this.lessonRepository.getLessonsByScheduleBeforeAndDivision(OffsetDateTime.now(),(user.getDivision()).toLowerCase());
         return lessonMapper.toDtos(lessons);
     }
 
@@ -69,6 +69,13 @@ public class LessonServices {
         }
         lessonRepository.delete(lesson);
         return "Lesson deleted successfully";
+    }
+
+    public List<LessonDto> getAllLessonsByDivision() {
+        var user = this.userServices.currentUser();
+        var lessons = this.lessonRepository.getLessonsByDivision((user.getDivision()).toLowerCase());
+        return lessonMapper.toDtos(lessons);
+
     }
 
 }

@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import java.util.List;
 
 @RestController
@@ -37,7 +35,7 @@ public class ResourceController {
             return ResponseEntity.badRequest().body("File must be a application/pdf file, you provided a " + file.getContentType());
         }
 
-        if(file.getSize() > 1000000){
+        if(file.getSize() > 5000000){
             return ResponseEntity.badRequest().body("File limit of 5MB exceeded");
         }
 

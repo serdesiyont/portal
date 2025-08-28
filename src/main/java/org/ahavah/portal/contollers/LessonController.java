@@ -67,4 +67,16 @@ public class LessonController {
         return ResponseEntity.ok(deleted);
     }
 
+    @PreAuthorize("hasRole('MENTOR')")
+    @GetMapping("/mentors")
+    public ResponseEntity<List<LessonDto>> getLessonsByDivision(
+    ) {
+
+        var lessons = this.lessonService.getAllLessonsByDivision();
+
+        if (lessons.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }return ResponseEntity.ok(lessons);
+    }
+
 }

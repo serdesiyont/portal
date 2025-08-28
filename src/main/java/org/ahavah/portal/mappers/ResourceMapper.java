@@ -9,6 +9,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface ResourceMapper {
+
+
     @Mapping(target="postedBy", ignore = true)
     Resource toEntity(String title);
 

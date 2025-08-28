@@ -2,7 +2,9 @@ package org.ahavah.portal.services;
 
 import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.dtos.exercise.CreateExerciseRequest;
+import org.ahavah.portal.dtos.exercise.ExerciseAllDto;
 import org.ahavah.portal.dtos.exercise.ExerciseDto;
+import org.ahavah.portal.dtos.exercise.UpdateExerciseDto;
 import org.ahavah.portal.mappers.ExerciseMapper;
 import org.ahavah.portal.repositories.ExerciseRepository;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,33 @@ public class ExerciseServices {
         return "Exercise deleted";
     }
 
+    public List<ExerciseAllDto> getAllExercisesByDivision(){
+        var user = this.userServices.currentUser();
+        var exercises = this.exerciseRepository.getExercisesByDivision((user.getDivision()).toLowerCase());
+        return this.exerciseMapper.toDtoAll(exercises);
+    }
+
+    public ExerciseAllDto updateExercise(Long id, UpdateExerciseDto updateExerciseDto) {
+        var user = this.userServices.currentUser();
+        var exercise = this.exerciseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Exercise not found with id: " + id));
+
+        if (!(user.getDivision()).equalsIgnoreCase(exercise.getDivision())) {
+            throw new SecurityException("You are not authorized to update this exercise");
+        }
+
+
+        var new_exercise = this.exerciseMapper.toUpdate(updateExerciseDto);
+        new_exercise.setPostedBy(user);
+        new_exercise.setDivision((user.getDivision()).toLowerCase());
+        this.exerciseRepository.save(new_exercise);
+        this.exerciseRepository.delete(exercise);
+        return this.exerciseMapper.toDtoAll(new_exercise);
+
+
+
+
+    }
 
 
 }

@@ -61,7 +61,9 @@ public class AuthController {
                        "ROLE", user.getRole(),
                        "DIVISION", user.getDivision(),
                        "ACCESS_TOKEN", access ,
-                       "REFRESH_TOKEN", refresh));
+                       "REFRESH_TOKEN", refresh,
+                       "EMAIL", user.getEmail(),
+                       "NAME", user.getName()));
            }
            catch (
                    BadCredentialsException e

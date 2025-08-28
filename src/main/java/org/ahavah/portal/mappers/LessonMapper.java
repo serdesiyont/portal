@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface LessonMapper {
 
+
     @Mapping(target = "postedBy", ignore = true)
     Lesson toEntity(CreateLessonRequest createLessonRequest);
 
