@@ -1,5 +1,6 @@
 package org.ahavah.portal.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.dtos.exercise.CreateExerciseRequest;
 import org.ahavah.portal.dtos.exercise.ExerciseAllDto;
@@ -55,6 +56,7 @@ public class ExerciseServices {
         return this.exerciseMapper.toDtoAll(exercises);
     }
 
+    @Transactional
     public ExerciseAllDto updateExercise(Long id, UpdateExerciseDto updateExerciseDto) {
         var user = this.userServices.currentUser();
         var exercise = this.exerciseRepository.findById(id)

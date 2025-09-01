@@ -20,6 +20,7 @@ public class CreateExerciseRequest {
     private Map<String, Object> boilerplate;
     @NotEmpty
     private Map<String, Object> testCases;
+
     private OffsetDateTime schedule;
 
 

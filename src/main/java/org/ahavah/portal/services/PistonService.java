@@ -1,5 +1,6 @@
 package org.ahavah.portal.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ahavah.portal.dtos.exercise.ExerciseDto;
 import org.apache.http.HttpException;
@@ -70,6 +71,8 @@ public class PistonService {
         if (response.statusCode() != 200) {
             throw new HttpException("Failed to execute code: " + response.body());
         }
-        return response.body();
+        String res = response.body();
+        JsonNode root = objectMapper.readTree(res);
+        return root.path("run").path("output").asText();
     }
 }

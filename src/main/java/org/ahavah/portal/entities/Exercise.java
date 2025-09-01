@@ -61,4 +61,8 @@ public class Exercise {
     @JoinColumn(name = "posted_by", nullable = false)
     private User postedBy;
 
+    @Column(name = "output")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, Object> output;
+
 }

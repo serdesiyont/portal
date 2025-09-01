@@ -1,6 +1,7 @@
 package org.ahavah.portal.handlers;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import org.apache.http.HttpException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,22 @@ public class GlobalErrorHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Amazon S3 error: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(HttpException.class)
+    public ResponseEntity<Map<String, String>> handleHttpException(HttpException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Http exception: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Runtime exception: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+
     }
 
 

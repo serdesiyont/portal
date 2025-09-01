@@ -25,8 +25,8 @@ public class ExerciseController {
     @PostMapping
     @PreAuthorize("hasRole('MENTOR')")
     public ResponseEntity<ExerciseDto> createExercise(
-            @Valid  @RequestBody CreateExerciseRequest createExerciseRequest) {
-
+          @RequestBody CreateExerciseRequest createExerciseRequest) {
+        System.out.println(createExerciseRequest);
         var exercise = exerciseServices.createExercise(createExerciseRequest);
         return ResponseEntity.ok().body(exercise);
 
@@ -45,21 +45,6 @@ public class ExerciseController {
 
     }
 
-    @PostMapping("/submit")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('MENTOR')")
-    public ResponseEntity<String> submitExercise(
-            @RequestBody  ExerciseDto exerciseDto
-    ){
-        System.out.println(exerciseDto.getBoilerplate());
-        try {
-            var res = this.pistonService.executeCode(exerciseDto);
-            return ResponseEntity.ok().body(res);
-
-        }
-        catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
 
     @GetMapping("/mentors")
@@ -77,7 +62,7 @@ public class ExerciseController {
     ){
         try {
             var updated = this.exerciseServices.updateExercise(id, exerciseDto);
-            return ResponseEntity.ok().body(updated);
+            return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

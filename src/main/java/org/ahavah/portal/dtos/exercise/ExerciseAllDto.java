@@ -1,5 +1,6 @@
 package org.ahavah.portal.dtos.exercise;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.ahavah.portal.dtos.user.UserDto;
 
@@ -16,6 +17,7 @@ public class ExerciseAllDto {
     private Map<String, Object> boilerplate;
     private UserDto user;
     private Map<String, Object> testCases;
+    private Map<String, Object> output;
     private OffsetDateTime schedule;
 
 }

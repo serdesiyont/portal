@@ -20,6 +20,7 @@ public class UpdateExerciseDto {
     private Map<String, Object> boilerplate;
     @NotEmpty
     private Map<String, Object> testCases;
-
+//    @NotEmpty
+//    private Map<String, Object> output;
     private OffsetDateTime schedule;
 }
