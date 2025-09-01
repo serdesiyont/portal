@@ -37,3 +37,10 @@ cloudflare:
     bucket-resources-url: ${CLOUDFLARE_RESOURCES_PUBLIC_URL}
 piston:
   base-url: ${PISTON_BASE_URL}
+
+otp:
+  host : ${SMTP_HOST}
+  from : ${SMTP_FROM}
+  username: ${SMTP_USERNAME}
+  password: ${SMTP_PASSWORD}
+  port: ${SMTP_PORT}

@@ -1,6 +1,5 @@
 package org.ahavah.portal.dtos.exercise;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.ahavah.portal.dtos.user.UserDto;
 
