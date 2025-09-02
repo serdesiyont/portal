@@ -2,6 +2,7 @@ package org.ahavah.portal.contollers;
 
 import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.dtos.otp.SendOTPRequest;
+import org.ahavah.portal.dtos.otp.VerifyOTPRequest;
 import org.ahavah.portal.services.OtpServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,5 +23,13 @@ public class OtpController {
         return ResponseEntity.ok(this.otpServices.sendRegisterOtp(sendOTPRequest));
 
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyOtp(
+            @RequestBody VerifyOTPRequest verifyOTPRequest
+    )
+        {
+        return ResponseEntity.ok(this.otpServices.verifyOtp(verifyOTPRequest));
+        }
 
 }

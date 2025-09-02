@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class CheckOTPRequest {
+public class VerifyOTPRequest {
     @Email
     private String email;
     @NotBlank

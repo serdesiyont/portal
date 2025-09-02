@@ -1,7 +1,9 @@
 package org.ahavah.portal.services;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.dtos.otp.SendOTPRequest;
+import org.ahavah.portal.dtos.otp.VerifyOTPRequest;
 import org.ahavah.portal.mappers.OtpMapper;
 import org.ahavah.portal.repositories.OtpRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +57,23 @@ public class OtpServices {
         return res;
     }
 
+
+    public Map<String, String> verifyOtp(VerifyOTPRequest verifyOTPRequest) {
+        var requestEmail = verifyOTPRequest.getEmail();
+        var latestCode = this.otpRepository.findTopByEmailOrderByIdDesc(requestEmail);
+        if (latestCode == null || (latestCode.getExpiresAt()).isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
+            return Map.of(
+                    "status", "Code Expired"
+            );
+        }
+        if (verifyOTPRequest.getCode().equals(latestCode.getCode()) &&
+                verifyOTPRequest.getPurpose().equalsIgnoreCase(latestCode.getPurpose())) {
+            return Map.of("status", "verified"
+                    );
+        }
+        return Map.of("status", "failed");
+    }
+
     // Generates an OTP, embeds it in the thymeleaf template, and sends an HTML email.
     // Returns a map with status, otp, expiresAt (OffsetDateTime)
     private Map<String, Object> sendEmail(SendOTPRequest sendOTPRequest, String templateName, String subject) {
@@ -84,10 +103,9 @@ public class OtpServices {
             resp.put("otp", otp);
             resp.put("expiresAt", expiresAt); // direct OffsetDateTime
             return resp;
-        } catch (Exception e) {
-            resp.put("status", "FAILED");
+        } catch (MessagingException e) {
             resp.put("error", e.getMessage());
-            return resp;
+            throw new RuntimeException(String.valueOf(resp));
         }
     }
 }
