@@ -1,15 +1,11 @@
 package org.ahavah.portal.services;
 
 import com.google.genai.Client;
-import com.google.genai.types.Candidate;
 import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.types.Part;
 import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.dtos.ChatRequest;
-import org.ahavah.portal.dtos.ChatResponse;
 import org.ahavah.portal.entities.Conversation;
 import org.ahavah.portal.repositories.ConversationRepository;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
