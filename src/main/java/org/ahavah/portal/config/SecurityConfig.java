@@ -1,6 +1,7 @@
 package org.ahavah.portal.config;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.ahavah.portal.filters.JwtAuthFilters;
 import org.ahavah.portal.services.auth.JwtService;
 import org.ahavah.portal.services.auth.UserService;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
     private final UserService authService;
@@ -67,6 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/otp/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/chat/**").permitAll()
 //                .requestMatchers(HttpMethod.POST, "/lessons").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()

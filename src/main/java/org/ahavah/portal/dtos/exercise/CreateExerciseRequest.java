@@ -22,6 +22,7 @@ public class CreateExerciseRequest {
     private Map<String, Object> testCases;
 
     private OffsetDateTime schedule;
+     
 
 
 }

@@ -51,6 +51,9 @@ public class User {
     @Column(name = "additional", length = Integer.MAX_VALUE)
     private String additional;
 
+    @Column(name = "api_key", length = Integer.MAX_VALUE)
+    private String apiKey;
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) createdAt = OffsetDateTime.now();
