@@ -22,27 +22,22 @@ public class ConversationService {
     private final ConversationRepository conversationRepository;
     private final UserServices userServices;
 
-    private static final double MODEL_TEMPERATURE = 0.4d; // not directly applied (API lacks config hook in this version)
-    private static final double MODEL_TOP_P = 0.95d;       // kept for future use
-    private static final int MODEL_MAX_OUTPUT_TOKENS = 1024; // kept for future use
-
-    private static final String SYSTEM_INSTRUCTION = "You are an AI programming tutor helping a student learn programming. " +
-            "Provide clear, step-by-step explanations, encourage best practices, and when appropriate ask concise clarifying " +
-            "questions before assuming requirements. Be encouraging, avoid overwhelming the student, and prefer runnable code examples. " +
-            "Always format responses using GitHub-flavored Markdown: use '# ' for the main title (only one), '## ' for subsections, fenced code blocks with language hints (e.g., ```java), bullet/numbered lists where helpful, tables when they add clarity, and inline links as [text](url). Start with a short '# Summary' section, then details in logically ordered '##' sections. Include a '## Explanation' and when code is present a '## Code' and '## Next Steps' section. Keep code minimal, correct, and runnable.";
 
    public String handleChat(ChatRequest chatRequest) {
        Map<String, String> history =  new HashMap<>();
        var user =  this.userServices.currentUser();
-       // apiKey handling intentionally untouched per instructions
+       var apiKey = user.getApiKey();
+       if(apiKey == null) {
+           throw new IllegalArgumentException("apiKey is null");
+       }
 
-        var chatHistory = this.conversationRepository.findByUserOrderByCreatedAtDesc(user, Limit.of(10));
+        var chatHistory = this.conversationRepository.findByUserOrderByCreatedAtDesc(user, Limit.of(5));
         for (Conversation entry : chatHistory) {
             history.put(entry.getUserMessage(), entry.getAiResponse());
         }
 
-        String GOOGLE_API_KEY="AIzaSyDOEOWceY4g_UwZjZFcyFqDm3gt3i5g9cU"; // left as-is
-        GenerateContentResponse response = chat(chatRequest.getMessage(),GOOGLE_API_KEY, formatHistory(chatHistory));
+
+        GenerateContentResponse response = chat(chatRequest.getMessage(),apiKey, formatHistory(chatHistory));
 
        String aiResponse = extractPlainText(response);
 
@@ -73,6 +68,18 @@ public class ConversationService {
     }
 
     private GenerateContentResponse chat(String message, String apiKey, String chatHistory) {
+
+        String SYSTEM_INSTRUCTION = "You are a supportive AI programming tutor. Your goal is to help students learn programming concepts with clarity, patience, and encouragement.\n" + //
+                        "\n" + //
+                        "- Explain concepts step by step in a way that builds understanding and intuition  \n" + //
+                        "- Provide runnable code examples only when they are genuinely helpful.  \n" + //
+                        "- Use GitHub-flavored Markdown for formatting:\n" + //
+                        "  - Use `#` for main heading and use`##` subsections  when the topic needs detailed structure.  \n" + //
+                        "  - Use fenced code blocks (```language) if the topic needs code examples  \n" + //
+                        "  - Use lists or tables only if they make the explanation easier to follow.  \n" + //
+                        "- Keep answers adaptive: short and direct for simple questions, structured and detailed only when needed.  \n" + //
+                        "- Encourage exploration, highlight common mistakes, and ask clarifying questions when it helps guide the student.  \n";//
+                        
         // Compose enriched prompt with system instruction + context + new user message
         StringBuilder promptBuilder = new StringBuilder();
         promptBuilder.append("[SYSTEM]\n").append(SYSTEM_INSTRUCTION).append("\n\n");
@@ -86,9 +93,7 @@ public class ConversationService {
 
         GenerateContentResponse reply;
         try (Client client = Client.builder().apiKey(apiKey).build()) {
-            // Library version (1.0.0) doesn't expose a documented generation config; using composed prompt only.
-            // Model related constants (adjust as needed if advanced config becomes available)
-            // unified model reference
+            
             String MODEL_NAME = "gemini-2.0-flash";
             reply = client.models.generateContent(
                     MODEL_NAME,
@@ -96,6 +101,7 @@ public class ConversationService {
                     null
             );
         }
+        System.out.println(reply);
         return reply;
     }
 
