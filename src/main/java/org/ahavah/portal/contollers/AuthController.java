@@ -55,7 +55,7 @@ public class AuthController {
 //                accessCookie.setMaxAge(3600);
 //                accessCookie.setSecure(false);
 //                response.addCookie(accessCookie);
-
+               boolean hasApiKey = user.getApiKey() != null;
                return ResponseEntity.ok(Map.of(
                        "msg", "Login Successful",
                        "ROLE", user.getRole(),
@@ -63,7 +63,9 @@ public class AuthController {
                        "ACCESS_TOKEN", access ,
                        "REFRESH_TOKEN", refresh,
                        "EMAIL", user.getEmail(),
-                       "NAME", user.getName()));
+                       "NAME", user.getName(),
+                       "HAS_API_KEY", hasApiKey));
+
            }
            catch (
                    BadCredentialsException e

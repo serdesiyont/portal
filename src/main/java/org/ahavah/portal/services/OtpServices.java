@@ -54,7 +54,9 @@ public class OtpServices {
             otpEntity.setExpiresAt(expiresAt);
             this.otpRepository.save(otpEntity);
         }
-        return res;
+        return Map.of(
+                "status", "SENT"
+        );
     }
 
 
@@ -63,7 +65,7 @@ public class OtpServices {
         var latestCode = this.otpRepository.findTopByEmailOrderByIdDesc(requestEmail);
         if (latestCode == null || (latestCode.getExpiresAt()).isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
             return Map.of(
-                    "status", "Code Expired"
+                    "status", "expired"
             );
         }
         if (verifyOTPRequest.getCode().equals(latestCode.getCode()) &&
