@@ -2,13 +2,13 @@ package org.ahavah.portal.contollers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.ahavah.portal.dtos.user.CreateUserRequest;
-import org.ahavah.portal.dtos.user.UpdateUserRequest;
-import org.ahavah.portal.dtos.user.UserDto;
+import org.ahavah.portal.dtos.user.*;
 import org.ahavah.portal.services.UserServices;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -52,6 +52,25 @@ public class UserContoller {
         return ResponseEntity.ok(user);
 
     }
+
+    @PreAuthorize("hasAnyRole('MENTOR', 'STUDENT', 'ADMIN')")
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @RequestBody UpdatePassRequest  updatePassRequest) {
+        var change = this.userServices.updatePassword(updatePassRequest);
+        return ResponseEntity.ok(change);
+    }
+
+    @PreAuthorize("hasAnyRole('MENTOR', 'STUDENT', 'ADMIN')")
+    @PostMapping("/add-api")
+    public ResponseEntity<Map<String, String>> addApiKey(
+            @Valid @RequestBody AddApiKey addApiKey){
+        var change = this.userServices.addApiKey(addApiKey);
+        return ResponseEntity.ok(change);
+    }
+
+
+
 
 
 }

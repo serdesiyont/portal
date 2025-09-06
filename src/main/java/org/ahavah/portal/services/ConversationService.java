@@ -10,9 +10,7 @@ import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -24,7 +22,6 @@ public class ConversationService {
 
 
    public String handleChat(ChatRequest chatRequest) {
-       Map<String, String> history =  new HashMap<>();
        var user =  this.userServices.currentUser();
        var apiKey = user.getApiKey();
        if(apiKey == null) {
@@ -32,9 +29,7 @@ public class ConversationService {
        }
 
         var chatHistory = this.conversationRepository.findByUserOrderByCreatedAtDesc(user, Limit.of(5));
-        for (Conversation entry : chatHistory) {
-            history.put(entry.getUserMessage(), entry.getAiResponse());
-        }
+
 
 
         GenerateContentResponse response = chat(chatRequest.getMessage(),apiKey, formatHistory(chatHistory));
@@ -95,6 +90,7 @@ public class ConversationService {
         try (Client client = Client.builder().apiKey(apiKey).build()) {
             
             String MODEL_NAME = "gemini-2.0-flash";
+
             reply = client.models.generateContent(
                     MODEL_NAME,
                     fullPrompt,
