@@ -1,20 +1,23 @@
 package org.ahavah.portal.services;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.ahavah.portal.dtos.user.*;
+ 
+import java.util.List;
+import java.util.Map;
+
+import org.ahavah.portal.dtos.user.AddApiKey;
+import org.ahavah.portal.dtos.user.CreateUserRequest;
+import org.ahavah.portal.dtos.user.UpdatePassRequest;
+import org.ahavah.portal.dtos.user.UpdateUserRequest;
+import org.ahavah.portal.dtos.user.UserDto;
 import org.ahavah.portal.entities.User;
 import org.ahavah.portal.mappers.UserMapper;
 import org.ahavah.portal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

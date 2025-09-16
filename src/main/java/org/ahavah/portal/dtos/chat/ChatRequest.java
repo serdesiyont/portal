@@ -1,4 +1,4 @@
-package org.ahavah.portal.dtos;
+package org.ahavah.portal.dtos.chat;
 
 import lombok.Data;
 
